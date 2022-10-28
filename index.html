@@ -159,43 +159,40 @@
                 { name: "Scotland FRA Rida", link: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTs6trvFN9fT8D8Ze3U-HEYRv0epMKi1V6HWWapubVA0r2atUgo8Pl4tEi5BsFoWi7bbTqt4j5poR1K/pub?gid=702685534&single=true&output=csv' },
             ]
 
-            d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vTs6trvFN9fT8D8Ze3U-HEYRv0epMKi1V6HWWapubVA0r2atUgo8Pl4tEi5BsFoWi7bbTqt4j5poR1K/pub?gid=0&single=true&output=csv")
-                .then(json => {
-                    console.log('json', json);
+            Promise.all(
+                spreadsheets.map(d => d3.csv(d.link))
+            ).then(arr => {
 
-                    //const types = [...new Set(json.map(i => i.type))]
-
-                    // switchersEnableDiv.appendChild(buildSwitcher("Satellite", checked => {
-                    //     const display = checked ? "visible" : "none"
-                    //     map.setLayoutProperty('satellite', 'visibility', display);
-                    // }, false))
-
-                    json.forEach(d => {
-                        d.lat = +d['Latitude Decimal'].replace(",", ".")
-                        d.lon = +d['Longitude Decimal'].replace(",", ".")
-                    })
-
-                    const pins = json
-                        .filter(pin => +pin.lat >= -90 && +pin.lat <= 90)
-                        .map(pin => {
-                            const { lat, lon, name, type } = pin
-
-                            // const 
-                            console.log('pin', pin);
-
-                            const colorIndex = Array.from(main.filters).indexOf(type)
-                            const color = colorArray[colorIndex]
-
-                            return turf.point([lon, lat], {
-                                color,
-                                name,
-                                type
-                            });
-                        });
-                    main.data.push(...pins)
-                    map.getSource("main").setData(turf.featureCollection(pins))
+                const layers = arr.map((json, key) => {
+                    const layerName = spreadsheets[key].name
+                    const color = colorArray[key]
+                    return buildData(json, layerName, color)
                 })
 
+                map.getSource("main").setData(turf.featureCollection(main.data.map(d => d.data).flat()))
+
+
+                main.data.map(d => {
+                    main.filters.add(d.layer)
+                    switchersEnableDiv.appendChild(buildSwitcher(d.layer, checked => {
+                        if (checked) {
+                            main.filters.add(d.layer)
+                        } else {
+                            main.filters.delete(d.layer)
+                        }
+                        //update pins 
+                        const filteredPins = main.data.filter(d => main.filters.has(d.layer)).map(d => d.data).flat()
+                        map.getSource("main").setData(turf.featureCollection(filteredPins))
+
+                    }, true))
+                })
+
+                // switchersEnableDiv.appendChild(buildSwitcher("Satellite", checked => {
+                //     const display = checked ? "visible" : "none"
+                //     map.setLayoutProperty('satellite', 'visibility', display);
+                // }, false))
+                // map.getSource("main").setData(turf.featureCollection(pins))
+            })
 
             map.addSource('main', {
                 'type': 'geojson',
@@ -227,6 +224,28 @@
             map.setLayoutProperty('satellite', 'visibility', display);
         }, false))
 
+        function buildData(json, layerName, color) {
+
+            console.log('json', json);
+
+            json.forEach(d => {
+                d.lat = +d['Latitude Decimal'].replace(",", ".")
+                d.lon = +d['Longitude Decimal'].replace(",", ".")
+            })
+            const pins = json
+                .filter(pin => +pin.lat >= -90 && +pin.lat <= 90)
+                .map(pin => {
+                    const { lat, lon, name, type } = pin
+                    const colorIndex = Array.from(main.filters).indexOf(type)
+                    return turf.point([lon, lat], {
+                        color,
+                        name,
+                        type
+                    });
+                });
+            main.data.push({ layer: layerName, data: pins })
+            return pins
+        }
 
         function filterData() {
             const pins = main.data.filter(pin => {
