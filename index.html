@@ -173,6 +173,17 @@
                 { name: "England Drainage Urban", link: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTs6trvFN9fT8D8Ze3U-HEYRv0epMKi1V6HWWapubVA0r2atUgo8Pl4tEi5BsFoWi7bbTqt4j5poR1K/pub?gid=28642398&single=true&output=csv' },
                 { name: "England Other Urban", link: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTs6trvFN9fT8D8Ze3U-HEYRv0epMKi1V6HWWapubVA0r2atUgo8Pl4tEi5BsFoWi7bbTqt4j5poR1K/pub?gid=187228781&single=true&output=csv' },
                 { name: "Scotland FRA Rida", link: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTs6trvFN9fT8D8Ze3U-HEYRv0epMKi1V6HWWapubVA0r2atUgo8Pl4tEi5BsFoWi7bbTqt4j5poR1K/pub?gid=702685534&single=true&output=csv' },
+                { name: "Scotland Drainage Rida", link: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTs6trvFN9fT8D8Ze3U-HEYRv0epMKi1V6HWWapubVA0r2atUgo8Pl4tEi5BsFoWi7bbTqt4j5poR1K/pub?gid=1089810340&single=true&output=csv' },
+                { name: "Scotland Other Rida", link: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTs6trvFN9fT8D8Ze3U-HEYRv0epMKi1V6HWWapubVA0r2atUgo8Pl4tEi5BsFoWi7bbTqt4j5poR1K/pub?gid=1186331095&single=true&output=csv' },
+                { name: "Scotland FRA Urban", link: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTs6trvFN9fT8D8Ze3U-HEYRv0epMKi1V6HWWapubVA0r2atUgo8Pl4tEi5BsFoWi7bbTqt4j5poR1K/pub?gid=152206229&single=true&output=csv' },
+                { name: "Scotland Drainage Urban", link: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTs6trvFN9fT8D8Ze3U-HEYRv0epMKi1V6HWWapubVA0r2atUgo8Pl4tEi5BsFoWi7bbTqt4j5poR1K/pub?gid=404349583&single=true&output=csv' },
+                { name: "Scotland Other Urban", link: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTs6trvFN9fT8D8Ze3U-HEYRv0epMKi1V6HWWapubVA0r2atUgo8Pl4tEi5BsFoWi7bbTqt4j5poR1K/pub?gid=1564152384&single=true&output=csv' },
+                { name: "Wales FRA Rida", link: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTs6trvFN9fT8D8Ze3U-HEYRv0epMKi1V6HWWapubVA0r2atUgo8Pl4tEi5BsFoWi7bbTqt4j5poR1K/pub?gid=314338292&single=true&output=csv' },
+                { name: "Wales Drainage Rida", link: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTs6trvFN9fT8D8Ze3U-HEYRv0epMKi1V6HWWapubVA0r2atUgo8Pl4tEi5BsFoWi7bbTqt4j5poR1K/pub?gid=347642958&single=true&output=csv' },
+                { name: "Wales Other Rida", link: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTs6trvFN9fT8D8Ze3U-HEYRv0epMKi1V6HWWapubVA0r2atUgo8Pl4tEi5BsFoWi7bbTqt4j5poR1K/pub?gid=83207384&single=true&output=csv' },
+                { name: "Wales FRA Urban", link: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTs6trvFN9fT8D8Ze3U-HEYRv0epMKi1V6HWWapubVA0r2atUgo8Pl4tEi5BsFoWi7bbTqt4j5poR1K/pub?gid=663461733&single=true&output=csv' },
+                { name: "Wales Drainage Urban", link: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTs6trvFN9fT8D8Ze3U-HEYRv0epMKi1V6HWWapubVA0r2atUgo8Pl4tEi5BsFoWi7bbTqt4j5poR1K/pub?gid=1616744390&single=true&output=csv' },
+                { name: "Wales Other Urban", link: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTs6trvFN9fT8D8Ze3U-HEYRv0epMKi1V6HWWapubVA0r2atUgo8Pl4tEi5BsFoWi7bbTqt4j5poR1K/pub?gid=538783120&single=true&output=csv' },
             ]
 
             Promise.all(
@@ -239,11 +250,17 @@
                 while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
                     coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
                 }
+                console.log('data', data);
                 const description = `
                     <div>
-                        <div>Project No.: ${data['Project No.']}<div>
-                        <div>Company: ${data['Company']}<div>
-                        <div>Ceremonial County: ${data['Ceremonial County']}<div>
+                        <div>Project No.: ${data['Project No.']}</div>
+                        <div>Company: ${data['Company']}</div>
+                        <div>Postcode: ${data['Postcode']}</div>
+                        <div>FRA: ${data['FRA']}</div>
+                        <div>"Product ↵4 or 6": ${data['Product ↵4 or 6']}</div>
+                        <div>Ceremonial County: ${data['Ceremonial County']}</div>
+                        <div>Ceremonial County: ${data['Ceremonial County']}</div>
+                        <div>Region: ${data["Region"]}</div>
                     </div >
 
                 `
@@ -272,10 +289,12 @@
 
             console.log('json', json);
 
-            json.forEach(d => {
-                d.lat = +d['Latitude Decimal'].replace(",", ".")
-                d.lon = +d['Longitude Decimal'].replace(",", ".")
-            })
+            json
+                .filter(d => d['Latitude Decimal'])
+                .forEach(d => {
+                    d.lat = +d['Latitude Decimal'].replace(",", ".")
+                    d.lon = +d['Longitude Decimal'].replace(",", ".")
+                })
             const pins = json
                 .filter(pin => +pin.lat >= -90 && +pin.lat <= 90)
                 .map(pin => {
@@ -284,7 +303,8 @@
                     return turf.point([lon, lat], {
                         color,
                         name,
-                        type
+                        type,
+                        ...pin
                     });
                 });
             main.data.push({ layer: layerName, data: pins })
