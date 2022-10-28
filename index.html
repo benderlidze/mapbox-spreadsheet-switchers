@@ -165,6 +165,17 @@
                 }
             });
 
+            const fieldsToDisplay = [
+                'Project No.',
+                'Company',
+                'Postcode',
+                'FRA',
+                'Product ↵4 or 6',
+                'Ceremonial County',
+                'Ceremonial County',
+                'Region',
+            ]
+
             const spreadsheets = [
                 { name: "England FRA Rida", link: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTs6trvFN9fT8D8Ze3U-HEYRv0epMKi1V6HWWapubVA0r2atUgo8Pl4tEi5BsFoWi7bbTqt4j5poR1K/pub?gid=0&single=true&output=csv' },
                 { name: "England Drainage Rida", link: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTs6trvFN9fT8D8Ze3U-HEYRv0epMKi1V6HWWapubVA0r2atUgo8Pl4tEi5BsFoWi7bbTqt4j5poR1K/pub?gid=942755312&single=true&output=csv' },
@@ -251,19 +262,28 @@
                     coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
                 }
                 console.log('data', data);
-                const description = `
-                    <div>
-                        <div>Project No.: ${data['Project No.']}</div>
-                        <div>Company: ${data['Company']}</div>
-                        <div>Postcode: ${data['Postcode']}</div>
-                        <div>FRA: ${data['FRA']}</div>
-                        <div>"Product ↵4 or 6": ${data['Product ↵4 or 6']}</div>
-                        <div>Ceremonial County: ${data['Ceremonial County']}</div>
-                        <div>Ceremonial County: ${data['Ceremonial County']}</div>
-                        <div>Region: ${data["Region"]}</div>
-                    </div >
 
-                `
+                const fields = fieldsToDisplay.map(d => {
+                    if (data[d]) {
+                        return `<div>${d}: ${data[d]}</div>`
+                    }
+                    return ""
+                }).join("")
+
+                // const description = `
+                //     <div>
+                //         <div>Project No.: ${data['Project No.']}</div>
+                //         <div>Company: ${data['Company']}</div>
+                //         <div>Postcode: ${data['Postcode']}</div>
+                //         <div>FRA: ${data['FRA']}</div>
+                //         <div>"Product ↵4 or 6": ${data['Product ↵4 or 6']}</div>
+                //         <div>Ceremonial County: ${data['Ceremonial County']}</div>
+                //         <div>Ceremonial County: ${data['Ceremonial County']}</div>
+                //         <div>Region: ${data["Region"]}</div>
+                //     </div >
+                // `
+
+                const description = `<div>${fields}</div>`
                 new mapboxgl.Popup()
                     .setLngLat(coordinates)
                     .setHTML(description)
